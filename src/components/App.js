@@ -1,69 +1,29 @@
-import React, { Component } from 'react';
-import './App.css';
-import * as firebase from 'firebase';
+import React from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import './styles/App.css';
 
-import firebaseConfig from './utils/firebase_config';
+import * as ROUTES from './routes';
+import { withAuthentication } from '../utils/Session';
 
-firebase.intializeApp(firebaseConfig)
+import Navigation from './Navigation/Navigation';
+import Footer from './Footer/Footer';
+import Landing from './Landing/Landing';
+import HomePage from './Home/Home';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isLoggedIn: false,
-      user: ""
-    }
-  }
-
-  toggleLoggedIn() {
-    this.setState({ isLoggedIn: !isLoggedIn });
-  }
-
-  setUser(user) {
-    this.setState({ user: user });
-  }
-
-
-  render() {
-    return (
+const App = () => (
+    <Router>
       <div className="container-fluid">
-        <header className="App-header">
           <div className="container-fluid">
-            <nav className="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
-              <a href="/" className="navbar-brand">Lists & Friends</a>
-              <div >
-                {
-                  isLoggedIn ?
-                  <button
-                    className="btn btn-outline-warning"
-                    id="nav-logout"
-                    onClick={this.logout.bind(this)}
-                  >
-                    Log Out
-                  </button>
-                  :
-                  <button
-                    className="btn btn-outline-success"
-                    id="nav-login"
-                    onClick={this.login.bind(this)}
-                  >
-                    Log In
-                  </button>
-                }
-              </div>
-            </nav>
+            <Navigation />
           </div>
-        </header>
-        <div className="col-4" id="lists">
-          Lists will be here
-        </div>
-        <div className="col-8" id="items">
-          ~*~*~*~items here~*~*~*~
-        </div>
-      </div>
-    );
-  }
-}
 
-export default App;
+          <Route exact path={ROUTES.LANDING} component={Landing} />
+          <Route path={ROUTES.HOME} component={HomePage} />
+
+          <hr />
+        <Footer />
+      </div>
+    </Router>
+)
+
+export default withAuthentication(App);
