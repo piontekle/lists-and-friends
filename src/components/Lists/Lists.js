@@ -37,6 +37,37 @@ class Lists extends Component {
         lists: this.state.lists.concat( list ),
         loading: false
       });
+    });
+
+    this.listsRef.on('child_changed', snapshot => {
+      const editedList = snapshot.val();
+      editedList.key = snapshot.key;
+
+      this.state.lists.forEach( list => {
+        if (list.key === editedList.key) {
+          list.list = editedList.list;
+        }
+      });
+
+      this.setState({
+        editListTitle: "",
+        editing: false,
+        editLists: false
+      });
+    })
+
+    this.listsRef.on('child_removed', snapshot => {
+      const deletedList = snapshot.val();
+      deletedList.key = snapshot.key;
+
+      var filteredLists = this.state.lists.filter( list => {
+        return list.key !== deletedList.key;
+      })
+
+      this.setState({
+        lists: filteredLists,
+        editLists: false
+      });
     })
   }
 
@@ -84,34 +115,13 @@ class Lists extends Component {
 
     if (listKey === undefined || editListTitle === "") return;
 
-    this.state.lists.forEach( list => {
-      if (list.key === listKey) {
-        list.list = editListTitle;
-      }
-    });
-
     this.listsRef.child(listKey).update({ "list": editListTitle });
-
-    this.setState({
-      editListTitle: "",
-      editing: false,
-      editLists: false
-    });
   }
 
   deleteList(listKey) {
     if (listKey === this.state.activeList.key) {
       this.setActiveList('');
     }
-
-    var filteredLists = this.state.lists.filter( list => {
-      return list.key !== listKey;
-    })
-
-    this.setState({
-      lists: filteredLists,
-      editLists: false
-    });
 
     this.listsRef.child(listKey).remove();
     this.deleteListItems(listKey);

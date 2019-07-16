@@ -35,6 +35,33 @@ class Items extends Component {
         loading: false
       });
     })
+
+    this.itemsRef.on('child_changed', snapshot => {
+      const editedItem = snapshot.val()
+      editedItem.key = snapshot.key;
+
+      this.state.items.forEach( item => {
+        if (item.key === editedItem.key) {
+          item.item = editedItem.item;
+        }
+      });
+
+      this.setState({
+        editItemTitle: "",
+        editing: false
+      });
+    });
+
+    this.itemsRef.on('child_removed', snapshot => {
+      const deletedItem = snapshot.val();
+      deletedItem.key = snapshot.key;
+
+      var filteredItems = this.state.items.filter( item => {
+        return item.key !== deletedItem.key;
+      })
+
+      this.setState({ items: filteredItems });
+    });
   }
 
   handleChange(e) {
@@ -74,27 +101,10 @@ class Items extends Component {
 
     if (itemKey === undefined || editItemTitle === "") return;
 
-    this.state.items.forEach( item => {
-      if (item.key === itemKey) {
-        item.item = editItemTitle;
-      }
-    });
-
     this.itemsRef.child(itemKey).update({ "item": editItemTitle });
-
-    this.setState({
-      editItemTitle: "",
-      editing: false
-    });
   }
 
   deleteItem(itemKey) {
-    var filteredItems = this.state.items.filter( item => {
-      return item.key !== itemKey;
-    })
-
-    this.setState({ items: filteredItems });
-
     this.itemsRef.child(itemKey).remove();
   }
 
