@@ -14,6 +14,7 @@ const SignIn = () => (
 
 const INTITIAL_STATE = {
   username: '',
+  email: '',
   password: '',
   error: null
 }
@@ -34,14 +35,18 @@ class SignInFormBase extends Component {
   onSubmit(e) {
     const { username, password } = this.state;
 
-    this.props.firebase.signIn(username, password)
-    .then(() => {
-      this.setState({ ...INTITIAL_STATE });
-      this.props.history.push(ROUTES.HOME);
+    this.props.firebase.users().orderByChild("username").equalTo(username).once("value", snapshot => {
+       const email = Object.values(snapshot.val())[0].email;
+
+      this.props.firebase.signIn(email, password)
+      .then(() => {
+        this.setState({ ...INTITIAL_STATE });
+        this.props.history.push(ROUTES.HOME);
+      })
+      .catch(err => {
+        this.setState({ error: err });
+      });
     })
-    .catch(err => {
-      this.setState({ error: err });
-    });
 
     e.preventDefault();
   }

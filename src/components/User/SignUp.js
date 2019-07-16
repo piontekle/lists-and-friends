@@ -35,23 +35,33 @@ class SignUpFormBase extends Component {
     console.log("submit SIGN UP called")
     const { username, email, password } = this.state;
 
-    this.props.firebase.createUserWithEmail(email, password)
-    .then(user => {
-      return this.props.firebase
-      .user(user.user.uid)
-      .set({
-        username,
-        email
-      });
+    this.props.firebase.users().orderByChild("username").equalTo(username).once("value", snapshot => {
+      if (snapshot.exists()) {
+        const error = {
+          message: "Username already exists"
+        }
+        this.setState({ error: error })
+      } else {
+        this.props.firebase.createUserWithEmail(email, password)
+        .then(user => {
+          return this.props.firebase
+          .user(user.user.uid)
+          .set({
+            username,
+            email
+          });
+        })
+        .then(() => {
+          this.setState({ ...INTITIAL_STATE });
+          this.props.history.replace(ROUTES.HOME);
+        })
+        .catch(err => {
+          console.log("sign up error is: " + err.message)
+          this.setState({ error: err });
+        });
+      }
     })
-    .then(() => {
-      this.setState({ ...INTITIAL_STATE });
-      this.props.history.replace(ROUTES.HOME);
-    })
-    .catch(err => {
-      console.log("sign up error is: " + err.message)
-      this.setState({ error: err });
-    });
+
 
     e.preventDefault();
   }
