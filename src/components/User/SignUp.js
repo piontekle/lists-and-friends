@@ -32,15 +32,14 @@ class SignUpFormBase extends Component {
   }
 
   onSubmit(e) {
-    console.log("submit SIGN UP called")
     const { username, email, password } = this.state;
 
     this.props.firebase.users().orderByChild("username").equalTo(username).once("value", snapshot => {
       if (snapshot.exists()) {
-        const error = {
+        const err = {
           message: "Username already exists"
         }
-        this.setState({ error: error })
+        this.setState({ error: err })
       } else {
         this.props.firebase.createUserWithEmail(email, password)
         .then(user => {

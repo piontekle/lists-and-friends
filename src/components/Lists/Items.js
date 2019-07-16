@@ -71,12 +71,17 @@ class Items extends Component {
 
     return (
       <div className="container">
-        {loading && <div>Loading...</div>}
-        <ItemsList
-          list={this.props.list}
-          items={items}
-          deleteItem={(itemKey) => this.deleteItem(itemKey)}
-        />
+        {items.length ?
+          <>
+          <p>{loading && <div>Loading...</div>}</p>
+          <ItemsList
+            list={this.props.list}
+            items={items}
+            deleteItem={(itemKey) => this.deleteItem(itemKey)}
+          />
+        </> :
+        <p>No items yet!</p>
+        }
         <div className="row">
           <div className="col-4" id="lists">
             <form className="form-group" onSubmit={(e) => this.createItem(e)}>
@@ -84,11 +89,11 @@ class Items extends Component {
                 type="text"
                 className="form-control"
                 value={ newItemName }
-                aria-describedby="newListHelp"
+                aria-describedby="newItemHelp"
                 placeholder="New item..."
                 onChange={(e) => this.handleChange(e)}
               />
-              <button type="submit" className="btn btn-outline-primary">
+              <button type="submit" className="btn btn-outline-primary btn-block">
                 <Octicon icon={ Plus }/>
               </button>
             </form>

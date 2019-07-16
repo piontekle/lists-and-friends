@@ -11,6 +11,7 @@ const INTITIAL_STATE = {
   activeList: '',
   lists: [],
   newListTitle: '',
+  editLists: false,
   error: null
 }
 
@@ -57,6 +58,10 @@ class Lists extends Component {
     this.setState({ newListTitle: "" });
   }
 
+  editLists() {
+    this.setState({ editLists: !this.state.editLists });
+  }
+
   deleteList(listKey) {
     if (listKey === this.state.activeList.key) {
       this.setActiveList('');
@@ -66,16 +71,19 @@ class Lists extends Component {
       return list.key !== listKey;
     })
 
-    this.setState({ lists: filteredLists });
+    this.setState({
+      lists: filteredLists,
+      editLists: false
+    });
 
     this.listsRef.child(listKey).remove();
-    /* this.deleteListItems(listKey); */
+    this.deleteListItems(listKey);
   }
 
   deleteListItems(listKey) {
     const itemsRef = this.props.firebase.items();
 
-    itemsRef.on('value', snapshot => {
+    itemsRef.on('child_added', snapshot => {
       const item = snapshot.val();
       item.key = snapshot.key;
 
@@ -90,22 +98,41 @@ class Lists extends Component {
   }
 
   render() {
-    const { lists, activeList, newListTitle, loading } = this.state;
+    const { lists, activeList, newListTitle, editLists, loading } = this.state;
 
     return (
       <div className="container">
         <div className="row">
           <div className="col-4" id="lists">
-            {loading && <div>Loading...</div>}
-            <ListLists
-              lists={lists}
-              userId={this.props.user.uid}
-              deleteList={(listKey) => this.deleteList(listKey)}
-              setActiveList={(list) => this.setActiveList(list)}
-              activeList={activeList}
-            />
+            <h4>Lists
+              <button
+                className="btn btn-outline-secondary btn-sm edit-lists"
+                onClick={this.editLists.bind(this)}
+                data-toggle="button"
+                aria-pressed="false"
+              >
+                <Octicon icon={ Pencil } />
+              </button>
+            </h4>
+            <hr />
+            {lists.length ?
+              <>
+                {loading && <div>Loading...</div>}
+                <ListLists
+                  lists={lists}
+                  userId={this.props.user.uid}
+                  editLists={editLists}
+                  deleteList={(listKey) => this.deleteList(listKey)}
+                  setActiveList={(list) => this.setActiveList(list)}
+                  activeList={activeList}
+                />
+              </> :
+              <p>No lists yet!</p>
+            }
           </div>
           <div className="col-8" id="items">
+            <h4>Items</h4>
+            <hr />
             {
               activeList ?
               <Items
@@ -127,7 +154,7 @@ class Lists extends Component {
                 placeholder="New list title..."
                 onChange={(e) => this.handleChange(e)}
               />
-              <button type="submit" className="btn btn-outline-primary">
+              <button type="submit" className="btn btn-outline-primary btn-block">
                 <Octicon icon={ Plus }/>
               </button>
             </form>
@@ -138,7 +165,7 @@ class Lists extends Component {
   }
 }
 
-const ListLists = ({ lists, userId, deleteList, activeList, setActiveList }) => (
+const ListLists = ({ lists, userId, editLists, deleteList, activeList, setActiveList }) => (
   <ul className="list-group">
     {
       lists.filter(list => list.userId === userId).map((list, index) =>
@@ -148,14 +175,14 @@ const ListLists = ({ lists, userId, deleteList, activeList, setActiveList }) => 
           key={list.key}
           onClick={ () => setActiveList(list) }
         >
-          <Octicon icon={ Pencil } />
+          {editLists && <Octicon icon={ Pencil } />}
           {' '}{list.list}
-          <button
+          {editLists && <button
             className="btn btn-outline-danger"
             onClick={() => deleteList(list.key)}
           >
             <Octicon icon={ X } />
-          </button>
+          </button>}
         </li>
       )
     }
