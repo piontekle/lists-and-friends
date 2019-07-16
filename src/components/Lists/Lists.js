@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import '../styles/App.css';
+import Popup from 'reactjs-popup';
 import Octicon, { Plus, Pencil, X } from '@primer/octicons-react';
 
 import Items from './Items';
@@ -11,7 +12,10 @@ const INTITIAL_STATE = {
   activeList: '',
   lists: [],
   newListTitle: '',
+  editListTitle: '',
   editLists: false,
+  editing: false,
+  listToEdit: '',
   error: null
 }
 
@@ -37,7 +41,7 @@ class Lists extends Component {
   }
 
   handleChange(e) {
-    this.setState({ newListTitle: e.target.value });
+    this.setState({ [e.target.name]: e.target.value });
   }
 
   setActiveList(list) {
@@ -58,8 +62,41 @@ class Lists extends Component {
     this.setState({ newListTitle: "" });
   }
 
-  editLists() {
+  toggleEditLists() {
     this.setState({ editLists: !this.state.editLists });
+  }
+
+  toggleEditing(listKey) {
+    if (listKey === "") return;
+
+    const list = this.state.lists.find(list => {
+       return list.key === listKey;
+     })
+
+    this.setState({
+      editing: !this.state.editing,
+      listToEdit: list
+    });
+  }
+
+  editList(listKey) {
+    const { editListTitle } = this.state;
+
+    if (listKey === undefined || editListTitle === "") return;
+
+    this.state.lists.forEach( list => {
+      if (list.key === listKey) {
+        list.list = editListTitle;
+      }
+    });
+
+    this.listsRef.child(listKey).update({ "list": editListTitle });
+
+    this.setState({
+      editListTitle: "",
+      editing: false,
+      editLists: false
+    });
   }
 
   deleteList(listKey) {
@@ -98,7 +135,7 @@ class Lists extends Component {
   }
 
   render() {
-    const { lists, activeList, newListTitle, editLists, loading } = this.state;
+    const { lists, activeList, newListTitle, editListTitle, editLists, editing, listToEdit, loading } = this.state;
 
     return (
       <div className="container">
@@ -107,7 +144,7 @@ class Lists extends Component {
             <h4>Lists
               <button
                 className="btn btn-outline-secondary btn-sm edit-lists"
-                onClick={this.editLists.bind(this)}
+                onClick={this.toggleEditLists.bind(this)}
                 data-toggle="button"
                 aria-pressed="false"
               >
@@ -122,6 +159,7 @@ class Lists extends Component {
                   lists={lists}
                   userId={this.props.user.uid}
                   editLists={editLists}
+                  toggleEditing={(listKey) => this.toggleEditing(listKey)}
                   deleteList={(listKey) => this.deleteList(listKey)}
                   setActiveList={(list) => this.setActiveList(list)}
                   activeList={activeList}
@@ -129,6 +167,28 @@ class Lists extends Component {
               </> :
               <p>No lists yet!</p>
             }
+            <Popup
+              modal
+              open={editing}
+              closeOnDocumentClick
+              onClose={this.toggleEditing('')}
+            >
+              <form className="form-group" onSubmit={() => this.editList(listToEdit.key)}>
+                <label htmlFor="listEditInput">Edit {listToEdit.list}: </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="listEditInput"
+                  aria-describedby="editListHelp"
+                  name="editListTitle"
+                  placeholder={ editListTitle }
+                  onChange={(e) => this.handleChange(e)}
+                />
+                <button type="submit" className="btn btn-outline-primary btn-block">
+                  <Octicon icon={ Pencil }/>
+                </button>
+              </form>
+            </Popup>
           </div>
           <div className="col-8" id="items">
             <h4>Items</h4>
@@ -149,6 +209,7 @@ class Lists extends Component {
               <input
                 type="text"
                 className="form-control"
+                name="newListTitle"
                 value= { newListTitle }
                 aria-describedby="newListHelp"
                 placeholder="New list title..."
@@ -165,7 +226,7 @@ class Lists extends Component {
   }
 }
 
-const ListLists = ({ lists, userId, editLists, deleteList, activeList, setActiveList }) => (
+const ListLists = ({ lists, userId, editLists, toggleEditing, deleteList, activeList, setActiveList }) => (
   <ul className="list-group">
     {
       lists.filter(list => list.userId === userId).map((list, index) =>
@@ -175,7 +236,13 @@ const ListLists = ({ lists, userId, editLists, deleteList, activeList, setActive
           key={list.key}
           onClick={ () => setActiveList(list) }
         >
-          {editLists && <Octicon icon={ Pencil } />}
+          {editLists && <button
+              className="pencil-edit"
+              onClick={() => toggleEditing(list.key)}
+            >
+            <Octicon icon={ Pencil } />
+            </ button>
+          }
           {' '}{list.list}
           {editLists && <button
             className="btn btn-outline-danger"

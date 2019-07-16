@@ -31,6 +31,12 @@
   float: right;
 }
 
+.pencil-edit {
+  background: None;
+  outline: none;
+  border: none;
+}
+
 h4 {
   margin-top: 10px;
 }
