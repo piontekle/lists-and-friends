@@ -40,3 +40,12 @@
 h4 {
   margin-top: 10px;
 }
+
+h6 {
+  margin-top: 10px;
+}
+
+.list-row {
+  min-height: 350px;
+  overflow: auto;
+}

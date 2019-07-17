@@ -75,8 +75,8 @@ class Lists extends Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
-  setActiveList(list) {
-    this.setState({ activeList: list });
+  setActiveList(listKey) {
+    this.setState({ activeList: listKey });
   }
 
   createList(e) {
@@ -119,7 +119,7 @@ class Lists extends Component {
   }
 
   deleteList(listKey) {
-    if (listKey === this.state.activeList.key) {
+    if (listKey === this.state.activeList) {
       this.setActiveList('');
     }
 
@@ -145,7 +145,7 @@ class Lists extends Component {
   }
 
   render() {
-    const { lists, activeList, newListTitle, editListTitle, editLists, editing, listToEdit, loading } = this.state;
+    const { lists, activeList, newListTitle, editLists, editing, listToEdit, loading } = this.state;
 
     return (
       <div className="container">
@@ -162,6 +162,7 @@ class Lists extends Component {
               </button>
             </h4>
             <hr />
+            <div className="list-row">
             {lists.length ?
               <>
                 {loading && <div>Loading...</div>}
@@ -175,46 +176,31 @@ class Lists extends Component {
                   activeList={activeList}
                 />
               </> :
-              <p>No lists yet!</p>
-            }
-            <Popup
-              modal
-              open={editing}
-              closeOnDocumentClick
-              onClose={this.toggleEditing('')}
-            >
-              <form className="form-group" onSubmit={() => this.editList(listToEdit.key)}>
-                <label htmlFor="listEditInput">Edit {listToEdit.list}: </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="listEditInput"
-                  aria-describedby="editListHelp"
-                  name="editListTitle"
-                  placeholder={ editListTitle }
-                  onChange={(e) => this.handleChange(e)}
-                />
-                <button type="submit" className="btn btn-outline-primary btn-block">
-                  <Octicon icon={ Pencil }/>
-                </button>
-              </form>
-            </Popup>
-          </div>
-          <div className="col-8" id="items">
-            <h4>Items</h4>
-            <hr />
-            {
-              activeList ?
-              <Items
-                list={activeList}
-                user={this.props.user}
-              /> :
-              <p>Select list to view items</p>
-            }
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-4" id="lists">
+                <p>No lists yet!</p>
+              }
+              <Popup
+                modal
+                open={editing}
+                closeOnDocumentClick
+                onClose={this.toggleEditing('')}
+              >
+                <form className="form-group" onSubmit={() => this.editList(listToEdit.key)}>
+                  <label htmlFor="listEditInput">Edit {listToEdit.list}: </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="listEditInput"
+                    aria-describedby="editListHelp"
+                    name="editListTitle"
+                    placeholder={ listToEdit.list }
+                    onChange={(e) => this.handleChange(e)}
+                  />
+                  <button type="submit" className="btn btn-outline-primary btn-block">
+                    <Octicon icon={ Pencil }/>
+                  </button>
+                </form>
+              </Popup>
+            </div>
             <form className="form-group" onSubmit={(e) => this.createList(e)}>
               <input
                 type="text"
@@ -230,6 +216,18 @@ class Lists extends Component {
               </button>
             </form>
           </div>
+          <div className="col-8" id="items">
+            <h4>Items</h4>
+            <hr />
+            {
+              activeList ?
+              <Items
+                list={activeList}
+                user={this.props.user}
+              /> :
+              <p>Select list to view items</p>
+            }
+          </div>
         </div>
       </div>
     )
@@ -241,10 +239,10 @@ const ListLists = ({ lists, userId, editLists, toggleEditing, deleteList, active
     {
       lists.filter(list => list.userId === userId).map((list, index) =>
         <li
-          className={list.list === activeList.list ?
+          className={list.key === activeList ?
             "list-group-item active" : "list-group-item"}
           key={list.key}
-          onClick={ () => setActiveList(list) }
+          onClick={ () => setActiveList(list.key) }
         >
           {editLists && <button
               className="pencil-edit"

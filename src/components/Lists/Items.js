@@ -76,7 +76,7 @@ class Items extends Component {
 
     this.itemsRef.push({
       item: newItemName,
-      listId: this.props.list.key,
+      listId: this.props.list,
       userId: this.props.user.uid
     });
 
@@ -113,46 +113,48 @@ class Items extends Component {
   }
 
   render() {
-    const { items, newItemName, editItemName, itemToEdit, editing, loading } = this.state;
+    const { items, newItemName, itemToEdit, editing, loading } = this.state;
 
     return (
-      <div className="container">
-        {items.length ?
-          <>
-          <p>{loading && <div>Loading...</div>}</p>
-          <ItemsList
-            list={this.props.list}
-            items={items}
-            toggleEditing={(itemKey) => this.toggleEditing(itemKey)}
-            deleteItem={(itemKey) => this.deleteItem(itemKey)}
-          />
-        </> :
-        <p>No items yet!</p>
-        }
-        <Popup
-          modal
-          open={editing}
-          closeOnDocumentClick
-          onClose={this.toggleEditing('')}
-        >
-          <form className="form-group" onSubmit={() => this.editItem(itemToEdit.key)}>
-            <label htmlFor="itemEditInput">Edit {itemToEdit.item}: </label>
-            <input
-              type="text"
-              className="form-control"
-              id="itemEditInput"
-              aria-describedby="editItemHelp"
-              name="editItemTitle"
-              placeholder={ editItemName }
-              onChange={(e) => this.handleChange(e)}
+      <div>
+        <div className="list-row">
+          {items.length ?
+            <>
+            <p>{loading && <div>Loading...</div>}</p>
+            <ItemsList
+              list={this.props.list}
+              items={items}
+              toggleEditing={(itemKey) => this.toggleEditing(itemKey)}
+              deleteItem={(itemKey) => this.deleteItem(itemKey)}
             />
-            <button type="submit" className="btn btn-outline-primary btn-block">
-              <Octicon icon={ Pencil }/>
-            </button>
-          </form>
-        </Popup>
+          </> :
+          <p>No items yet!</p>
+          }
+          <Popup
+            modal
+            open={editing}
+            closeOnDocumentClick
+            onClose={this.toggleEditing('')}
+          >
+            <form className="form-group" onSubmit={() => this.editItem(itemToEdit.key)}>
+              <label htmlFor="itemEditInput">Edit {itemToEdit.item}: </label>
+              <input
+                type="text"
+                className="form-control"
+                id="itemEditInput"
+                aria-describedby="editItemHelp"
+                name="editItemName"
+                placeholder={ itemToEdit.item }
+                onChange={(e) => this.handleChange(e)}
+              />
+              <button type="submit" className="btn btn-outline-primary btn-block">
+                <Octicon icon={ Pencil }/>
+              </button>
+            </form>
+          </Popup>
+        </div>
         <div className="row">
-          <div className="col-4" id="items">
+          <div className="col-8" id="items">
             <form className="form-group" onSubmit={(e) => this.createItem(e)}>
               <input
                 type="text"
@@ -177,7 +179,7 @@ class Items extends Component {
 const ItemsList = ({ items, list, toggleEditing, deleteItem }) => (
   <ul className="list-group">
     {
-      items.filter(item => item.listId === list.key).map((item, index) =>
+      items.filter(item => item.listId === list).map((item, index) =>
         <li
           className="list-group-item"
           key={item.key}

@@ -81,6 +81,8 @@ class SignUpFormBase extends Component {
       modal
       closeOnDocumentClick
       >
+        <h4>Sign Up for Lists & Friends</h4>
+        <small className="text-muted">Pick a username and password for everyone in your group to use.</small>
         <form className="form-group" onSubmit={e => this.onSubmit(e)}>
           {error && <p>{error.message}</p>}
           <input
@@ -92,6 +94,7 @@ class SignUpFormBase extends Component {
             value={username}
             onChange={e => this.handleChange(e)}
           />
+          <small className="text-muted">Case sensitive, at least 5 characters</small>
           <input
             className="form-control"
             type="email"
@@ -101,6 +104,7 @@ class SignUpFormBase extends Component {
             value={email}
             onChange={e => this.handleChange(e)}
           />
+          <small className="text-muted">Must be valid email</small>
           <input
             className="form-control"
             type="password"
@@ -110,6 +114,7 @@ class SignUpFormBase extends Component {
             value={password}
             onChange={e => this.handleChange(e)}
           />
+          <small className="text-muted">Case sensitive, at least 6 characters</small>
           <input
             className="form-control"
             type="password"
@@ -119,6 +124,7 @@ class SignUpFormBase extends Component {
             value={passwordConfirm}
             onChange={e => this.handleChange(e)}
           />
+          <small className="text-muted">Must match password above</small><br />
           <button
             className="btn btn-outline-success"
             disabled={isInvalid}

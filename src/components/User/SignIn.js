@@ -64,6 +64,8 @@ class SignInFormBase extends Component {
       closeOnDocumentClick
       >
         <form className="form-group" onSubmit={e => this.onSubmit(e)}>
+          <h4>Sign In to Lists & Friends</h4>
+          <small className="text-muted">Sign in using your group username.</small>
           {error && <p>{error.message}</p>}
           <input
             className="form-control"
@@ -74,6 +76,7 @@ class SignInFormBase extends Component {
             value={username}
             onChange={e => this.handleChange(e)}
           />
+          <small className="text-muted">Case sensitive</small>
           <input
             className="form-control"
             type="password"
