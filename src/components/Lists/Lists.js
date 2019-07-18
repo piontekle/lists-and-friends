@@ -151,7 +151,7 @@ class Lists extends Component {
       <div className="container">
         <div className="row">
           <div className="col-4" id="lists">
-            <h4>Lists
+            <h4 data-test="lists-header">Lists
               <button
                 className="btn btn-outline-secondary btn-sm edit-lists"
                 onClick={this.toggleEditLists.bind(this)}
@@ -217,7 +217,7 @@ class Lists extends Component {
             </form>
           </div>
           <div className="col-8" id="items">
-            <h4>Items</h4>
+            <h4 data-test="items-header">Items</h4>
             <hr />
             {
               activeList ?

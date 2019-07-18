@@ -25,6 +25,8 @@ class SignUpFormBase extends Component {
     super(props);
 
     this.state = { ...INTITIAL_STATE };
+
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   handleChange(e) {
@@ -52,10 +54,9 @@ class SignUpFormBase extends Component {
         })
         .then(() => {
           this.setState({ ...INTITIAL_STATE });
-          this.props.history.replace(ROUTES.HOME);
+          this.props.history.push(ROUTES.HOME);
         })
         .catch(err => {
-          console.log("sign up error is: " + err.message)
           this.setState({ error: err });
         });
       }
@@ -81,16 +82,17 @@ class SignUpFormBase extends Component {
       modal
       closeOnDocumentClick
       >
-        <h4>Sign Up for Lists & Friends</h4>
-        <small className="text-muted">Pick a username and password for everyone in your group to use.</small>
         <form className="form-group" onSubmit={e => this.onSubmit(e)}>
-          {error && <p>{error.message}</p>}
+          <h4 data-test="signup-header">Sign Up for Lists & Friends</h4>
+          <small className="text-muted">Pick a username and password for everyone in your group to use.</small>
+          {error && <p data-test="signup-error">{error.message}</p>}
           <input
             className="form-control"
             type="text"
             placeholder="Username"
             autoComplete="username"
             name="username"
+            data-test="signup-username"
             value={username}
             onChange={e => this.handleChange(e)}
           />
@@ -100,6 +102,7 @@ class SignUpFormBase extends Component {
             type="email"
             placeholder="Email"
             autoComplete="email"
+            data-test="signup-email"
             name="email"
             value={email}
             onChange={e => this.handleChange(e)}
@@ -110,6 +113,7 @@ class SignUpFormBase extends Component {
             type="password"
             placeholder="Password"
             autoComplete="new-password"
+            data-test="signup-password"
             name="password"
             value={password}
             onChange={e => this.handleChange(e)}
@@ -120,6 +124,7 @@ class SignUpFormBase extends Component {
             type="password"
             placeholder="Confirm Password"
             autoComplete="new-password"
+            data-test="signup-pass-confirm"
             name="passwordConfirm"
             value={passwordConfirm}
             onChange={e => this.handleChange(e)}
@@ -129,6 +134,7 @@ class SignUpFormBase extends Component {
             className="btn btn-outline-success"
             disabled={isInvalid}
             type="submit"
+            data-test="signup-submit"
           >
             Sign Up
           </button>

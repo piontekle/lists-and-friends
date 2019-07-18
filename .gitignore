@@ -6,7 +6,9 @@
 .pnp.js
 
 # testing
-/coverage
+serviceAccount.json
+cypress.env.json
+/cypress/config.json
 
 # production
 /build

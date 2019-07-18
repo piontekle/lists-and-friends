@@ -26,7 +26,7 @@ class UserMenu extends Component {
 
     return (
       <div className="container">
-        <h6>Hello, {username}! What's on the list today?</h6>
+        <h6 data-test="user-greeting">Hello, {username}! What's on the list today?</h6>
       </div>
     )
   }

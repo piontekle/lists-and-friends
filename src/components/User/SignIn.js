@@ -64,7 +64,7 @@ class SignInFormBase extends Component {
       closeOnDocumentClick
       >
         <form className="form-group" onSubmit={e => this.onSubmit(e)}>
-          <h4>Sign In to Lists & Friends</h4>
+          <h4 data-test="signin-header">Sign In to Lists & Friends</h4>
           <small className="text-muted">Sign in using your group username.</small>
           {error && <p>{error.message}</p>}
           <input
@@ -73,6 +73,7 @@ class SignInFormBase extends Component {
             placeholder="Username"
             autoComplete="username"
             name="username"
+            data-test="signin-username"
             value={username}
             onChange={e => this.handleChange(e)}
           />
@@ -83,11 +84,13 @@ class SignInFormBase extends Component {
             placeholder="Password"
             autoComplete="current-password"
             name="password"
+            data-test="signin-password"
             value={password}
             onChange={e => this.handleChange(e)}
           />
           <button
             className="btn btn-outline-success"
+            data-test="signin-submit"
             disabled={isInvalid}
             type="submit"
           >
