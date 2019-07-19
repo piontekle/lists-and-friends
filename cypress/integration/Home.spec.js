@@ -22,7 +22,6 @@ describe('Home Page', () => {
 
     it('shows list & items categories', () => {
       cy.get('[data-test=lists-header]').contains("Lists");
-      cy.get('[data-test=items-header]').contains("Items");
     })
 
     it('logs out & redirects to landing', () => {

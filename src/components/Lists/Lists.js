@@ -97,12 +97,8 @@ class Lists extends Component {
     this.setState({ editLists: !this.state.editLists });
   }
 
-  toggleEditing(listKey) {
-    if (listKey === "") return;
-
-    const list = this.state.lists.find(list => {
-       return list.key === listKey;
-     })
+  toggleEditing(list) {
+    if (list === "") return;
 
     this.setState({
       editing: !this.state.editing,
@@ -139,6 +135,7 @@ class Lists extends Component {
       }
     })
   }
+
 
   componentWillUnmount() {
     this.listsRef.off();
@@ -217,8 +214,6 @@ class Lists extends Component {
             </form>
           </div>
           <div className="col-8" id="items">
-            <h4 data-test="items-header">Items</h4>
-            <hr />
             {
               activeList ?
               <Items
@@ -244,20 +239,23 @@ const ListLists = ({ lists, userId, editLists, toggleEditing, deleteList, active
           key={list.key}
           onClick={ () => setActiveList(list.key) }
         >
-          {editLists && <button
-              className="pencil-edit"
-              onClick={() => toggleEditing(list.key)}
-            >
-            <Octicon icon={ Pencil } />
-            </ button>
-          }
-          {' '}{list.list}
-          {editLists && <button
+          {list.list}
+          {editLists &&
+            <span className="edit-button-group">
+            <button
+                className="pencil-edit"
+                onClick={() => toggleEditing(list)}
+              >
+              <Octicon icon={ Pencil } />
+              </ button>
+            <button
             className="btn btn-outline-danger"
             onClick={() => deleteList(list.key)}
           >
             <Octicon icon={ X } />
-          </button>}
+          </button>
+          </span>
+        }
         </li>
       )
     }

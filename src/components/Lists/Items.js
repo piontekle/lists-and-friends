@@ -12,6 +12,7 @@ const INTITIAL_STATE = {
   editItemName: '',
   itemToEdit: '',
   editing: false,
+  showPurchased: false,
   error: null
 }
 
@@ -19,7 +20,7 @@ class Items extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { ...INTITIAL_STATE };
+    this.state = { ...INTITIAL_STATE};
 
     this.itemsRef = this.props.firebase.items();
   }
@@ -43,6 +44,7 @@ class Items extends Component {
       this.state.items.forEach( item => {
         if (item.key === editedItem.key) {
           item.item = editedItem.item;
+          item.isPurchased = editedItem.isPurchased;
         }
       });
 
@@ -76,6 +78,7 @@ class Items extends Component {
 
     this.itemsRef.push({
       item: newItemName,
+      isPurchased: false,
       listId: this.props.list,
       userId: this.props.user.uid
     });
@@ -83,12 +86,8 @@ class Items extends Component {
     this.setState({ newItemName: '' });
   }
 
-  toggleEditing(itemKey) {
-    if (itemKey === "") return;
-
-    const item = this.state.items.find(item => {
-       return item.key === itemKey;
-     })
+  toggleEditing(item) {
+    if (item === "") return;
 
     this.setState({
       editing: !this.state.editing,
@@ -97,11 +96,21 @@ class Items extends Component {
   }
 
   editItem(itemKey) {
-    const { editItemTitle } = this.state;
+    const { editItemName } = this.state;
 
-    if (itemKey === undefined || editItemTitle === "") return;
+    if (itemKey === undefined || editItemName === "") return;
 
-    this.itemsRef.child(itemKey).update({ "item": editItemTitle });
+    this.itemsRef.child(itemKey).update({ "item": editItemName });
+  }
+
+  togglePurchase(item) {
+    var isPurchased = item.isPurchased;
+
+    this.itemsRef.child(item.key).update({ "isPurchased": !isPurchased });
+  }
+
+  toggleShowPurchased(value) {
+      this.setState({ showPurchased: value })
   }
 
   deleteItem(itemKey) {
@@ -113,21 +122,62 @@ class Items extends Component {
   }
 
   render() {
-    const { items, newItemName, itemToEdit, editing, loading } = this.state;
+    const { items, newItemName, itemToEdit, editing, showPurchased, loading } = this.state;
 
     return (
       <div>
+        <h4 data-test="items-header">
+          Items
+          <div className="btn-group btn-group-toggle edit-button-group">
+            <label className={!showPurchased ? "btn btn-outline-success active" : "btn btn-outline-success"}>
+              <input
+                type="radio"
+                name="showItems"
+                autoComplete="off"
+                data-test="show-items-btn"
+                checked={showPurchased === false}
+                onChange={() => this.toggleShowPurchased(false)}
+              />Items
+            </label>
+            <label className={showPurchased ? "btn btn-outline-success active" : "btn btn-outline-success"}>
+              <input
+                type="radio"
+                name="showPurchased"
+                data-test="show-purchased-btn"
+                checked={showPurchased === true}
+                onChange={() => this.toggleShowPurchased(true)}
+                />Purchased
+            </label>
+          </div>
+        </h4>
+        <hr />
         <div className="list-row">
           {items.length ?
-            <>
-            <p>{loading && <div>Loading...</div>}</p>
-            <ItemsList
-              list={this.props.list}
-              items={items}
-              toggleEditing={(itemKey) => this.toggleEditing(itemKey)}
-              deleteItem={(itemKey) => this.deleteItem(itemKey)}
-            />
-          </> :
+            <ul className="list-group">
+              <p>{loading && <div>Loading...</div>}</p>
+              {
+                items.filter(item => {
+                  if (item.listId === this.props.list && item.isPurchased === showPurchased) {
+                    return true;
+                  }
+                  return false
+                })
+                  .map((item, index) =>
+                  <li
+                    className="list-group-item"
+                    key={item.key}
+                  >
+                    <Item
+                      item={item}
+                      isPurchased={item.isPurchased}
+                      togglePurchase={(item) => this.togglePurchase(item)}
+                      toggleEditing={(itemKey) => this.toggleEditing(itemKey)}
+                      deleteItem={(itemKey) => this.deleteItem(itemKey)}
+                    />
+                  </li>
+                )
+              }
+            </ul> :
           <p>No items yet!</p>
           }
           <Popup
@@ -176,31 +226,31 @@ class Items extends Component {
   }
 }
 
-const ItemsList = ({ items, list, toggleEditing, deleteItem }) => (
-  <ul className="list-group">
-    {
-      items.filter(item => item.listId === list).map((item, index) =>
-        <li
-          className="list-group-item"
-          key={item.key}
-        >
-          <button
-            className="pencil-edit"
-            onClick={() => toggleEditing(item.key)}
-          >
-          <Octicon icon={ Pencil } />
-          </ button>
-          {' '}{item.item}
-          <button
-            className="btn btn-outline-danger"
-            onClick={() => deleteItem(item.key)}
-          >
-            <Octicon icon={ X } />
-          </button>
-        </li>
-      )
-    }
-  </ul>
+const Item = ({ item, isPurchased, togglePurchase, toggleEditing, deleteItem }) => (
+  <>
+    <span className="item-checkbox"><input
+      type="checkbox"
+      className="form-check-input"
+      data-test="item-checkbox"
+      checked={isPurchased}
+      onChange={() => togglePurchase(item)}
+    /></span>
+    {item.item}
+    <span className="edit-button-group">
+      <button
+        className="pencil-edit"
+        onClick={() => toggleEditing(item)}
+      >
+        <Octicon icon={ Pencil } />
+      </ button>
+      <button
+        className="btn btn-outline-danger"
+        onClick={() => deleteItem(item.key)}
+      >
+        <Octicon icon={ X } />
+      </button>
+    </span>
+    </>
 )
 
 

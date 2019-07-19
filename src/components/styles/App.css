@@ -23,7 +23,7 @@
   color: #61dafb;
 }
 
-.btn-outline-danger {
+.edit-button-group {
   float: right;
 }
 
@@ -35,6 +35,10 @@
   background: None;
   outline: none;
   border: none;
+}
+
+.item-checkbox {
+  margin-left: 8px;
 }
 
 h4 {
