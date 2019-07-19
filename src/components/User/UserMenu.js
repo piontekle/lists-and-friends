@@ -10,12 +10,12 @@ class UserMenu extends Component {
       username: null
     }
 
-    this.usersRef = this.props.firebase.users();
+    this.userRef = this.props.firebase.user(this.props.user.uid);
   }
 
   componentDidMount() {
-    this.usersRef.orderByChild("email").equalTo(this.props.user.email).once("value", snapshot => {
-      const user = Object.values(snapshot.val())[0];
+    this.userRef.once("value", snapshot => {
+      const user = snapshot.val();
 
       this.setState({ username: user.username });
     })
