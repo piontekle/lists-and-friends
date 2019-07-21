@@ -165,6 +165,7 @@ class Items extends Component {
                   .map((item, index) =>
                   <li
                     className="list-group-item"
+                    data-test="list-item"
                     key={item.key}
                   >
                     <Item
@@ -197,7 +198,7 @@ class Items extends Component {
                 placeholder={ itemToEdit.item }
                 onChange={(e) => this.handleChange(e)}
               />
-              <button type="submit" className="btn btn-outline-primary btn-block">
+              <button type="submit" data-test="edit-item-submit" className="btn btn-outline-primary btn-block">
                 <Octicon icon={ Pencil }/>
               </button>
             </form>
@@ -215,7 +216,7 @@ class Items extends Component {
                 placeholder="New item..."
                 onChange={(e) => this.handleChange(e)}
               />
-              <button type="submit" className="btn btn-outline-primary btn-block">
+              <button type="submit" data-test="new-item-submit" className="btn btn-outline-primary btn-block">
                 <Octicon icon={ Plus }/>
               </button>
             </form>
@@ -239,12 +240,14 @@ const Item = ({ item, isPurchased, togglePurchase, toggleEditing, deleteItem }) 
     <span className="edit-button-group">
       <button
         className="pencil-edit"
+        data-test="edit-item-btn"
         onClick={() => toggleEditing(item)}
       >
         <Octicon icon={ Pencil } />
       </ button>
       <button
         className="btn btn-outline-danger"
+        data-test="delete-item-btn"
         onClick={() => deleteItem(item.key)}
       >
         <Octicon icon={ X } />

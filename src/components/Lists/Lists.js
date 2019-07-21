@@ -153,6 +153,7 @@ class Lists extends Component {
                 className="btn btn-outline-secondary btn-sm edit-lists"
                 onClick={this.toggleEditLists.bind(this)}
                 data-toggle="button"
+                data-test="toggle-edit-btn"
                 aria-pressed="false"
               >
                 <Octicon icon={ Pencil } />
@@ -160,7 +161,7 @@ class Lists extends Component {
             </h4>
             <hr />
             <div className="list-row">
-            {lists.length ?
+            {lists.filter(list => list.userId === this.props.user.uid).length ?
               <>
                 {loading && <div>Loading...</div>}
                 <ListLists
@@ -173,7 +174,7 @@ class Lists extends Component {
                   activeList={activeList}
                 />
               </> :
-                <p>No lists yet!</p>
+                <p data-test="no-lists-p">No lists yet!</p>
               }
               <Popup
                 modal
@@ -192,7 +193,7 @@ class Lists extends Component {
                     placeholder={ listToEdit.list }
                     onChange={(e) => this.handleChange(e)}
                   />
-                  <button type="submit" className="btn btn-outline-primary btn-block">
+                  <button type="submit" data-test="edit-list-submit" className="btn btn-outline-primary btn-block">
                     <Octicon icon={ Pencil }/>
                   </button>
                 </form>
@@ -208,7 +209,7 @@ class Lists extends Component {
                 placeholder="New list title..."
                 onChange={(e) => this.handleChange(e)}
               />
-              <button type="submit" className="btn btn-outline-primary btn-block">
+              <button type="submit" data-test="new-list-submit" className="btn btn-outline-primary btn-block">
                 <Octicon icon={ Plus }/>
               </button>
             </form>
@@ -237,6 +238,7 @@ const ListLists = ({ lists, userId, editLists, toggleEditing, deleteList, active
           className={list.key === activeList ?
             "list-group-item active" : "list-group-item"}
           key={list.key}
+          data-test="list-list"
           onClick={ () => setActiveList(list.key) }
         >
           {list.list}
@@ -244,12 +246,14 @@ const ListLists = ({ lists, userId, editLists, toggleEditing, deleteList, active
             <span className="edit-button-group">
             <button
                 className="pencil-edit"
+                data-test="edit-list-btn"
                 onClick={() => toggleEditing(list)}
               >
               <Octicon icon={ Pencil } />
               </ button>
             <button
             className="btn btn-outline-danger"
+            data-test="delete-list-btn"
             onClick={() => deleteList(list.key)}
           >
             <Octicon icon={ X } />

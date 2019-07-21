@@ -15,6 +15,7 @@ class UserMenu extends Component {
 
   componentDidMount() {
     this.userRef.once("value", snapshot => {
+
       const user = snapshot.val();
 
       this.setState({ username: user.username });

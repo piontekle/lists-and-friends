@@ -20,7 +20,7 @@ describe('Sign Up', () => {
   })
 
   it('does not let a previously used username to sign up', () => {
-    const oldUsername = 'tester123'
+    const oldUsername = "tester123"
     const newEmail = "new@example.com"
     const newPassword = "test123"
     const newConfirm = "test123"
@@ -37,7 +37,7 @@ describe('Sign Up', () => {
 
   it('user can sign up with proper credentials', () => {
 
-    const newUsername = 'Username'
+    const newUsername = "Username"
 
     cy.get('[data-test=signup-username]').type(newUsername);
     cy.get('[data-test=signup-submit]').click();
