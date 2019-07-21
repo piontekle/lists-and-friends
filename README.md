@@ -1,6 +1,6 @@
-# Lists and Friends
+# Lists & Friends
 
-When you have multiple people shopping, the most efficient way to get everything on your list is to divide and conquer. Instead of your group having to text or call to update every time an item is collected, use Lists and Friends!
+When you have multiple people shopping, the most efficient way to get everything on your list is to divide and conquer. Instead of your group having to text or call to update every time an item is collected, use Lists & Friends!
 
 Create a single account for your group, login, and begin your list making. Everyone logged into the account can add, edit, and mark items as purchased, and everyone in the group will be updated in real time.
 
@@ -56,7 +56,7 @@ Deployed with [Firebase](https://firebase.google.com/docs).
 
 * Visit the live site:
 
-#### `https://lists-and-friends.firebaseapp.com/`
+#### `[Lists & Friends](https://lists-and-friends.firebaseapp.com/)`
 
 ## Upcoming Features
 
@@ -82,4 +82,4 @@ React and Firebase were used because of my familiarity with both in previous pro
 ## Acknowledgments
 
 * Thank you to the Robin Wieruch article [A Firebase in React Tutorial for Beginners](https://www.robinwieruch.de/complete-firebase-authentication-react-tutorial/) for getting me started with the authentication context.
-* Thank you to the Prescott Prue tutorial, [Testing React + Firebase Apps With Cypress](https://medium.com/@prescottprue/testing-react-firebase-apps-with-cypress-7d7a64d155de)for helping me set up testing.
+* Thank you to the Prescott Prue tutorial, [Testing React + Firebase Apps With Cypress](https://medium.com/@prescottprue/testing-react-firebase-apps-with-cypress-7d7a64d155de) for helping me set up testing.
