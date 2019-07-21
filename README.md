@@ -1,68 +1,85 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Lists and Friends
 
-## Available Scripts
+When you have multiple people shopping, the most efficient way to get everything on your list is to divide and conquer. Instead of your group having to text or call to update every time an item is collected, use Lists and Friends!
 
-In the project directory, you can run:
+Create a single account for your group, login, and begin your list making. Everyone logged into the account can add, edit, and mark items as purchased, and everyone in the group will be updated in real time.
 
-### `npm start`
+## Getting Started
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+
+### Prerequisites
+
+Before you get started, you'll need [npm](https://docs.npmjs.com/) installed.
+
+### Installing
+
+To get the project running in your console, from the project directory:
+
+* Install node modules:
+
+#### `npm install`
+
+
+* Run the app: 
+
+#### `npm start`
+
+* Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Running the tests
 
-### `npm run build`
+Tests were written with [Cypress](https://www.cypress.io/) with the [cypress-firebase library](https://www.npmjs.com/package/cypress-firebase).
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* To run tests:<br>
+**Currently you need to run tests individually. Running all tests together results in errors from asynchronously creating and deleting test lists and items.**
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+#### `npm run test:open`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+This could be remedied by combining tests or possibly with just more knowledge of Cypress testing structure. This was my first time using Cypress. With more time to read Cypress documentation and implement lessons learned, tests would have been more robust.
 
-### `npm run eject`
+## Deployment
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Deployed with [Firebase](https://firebase.google.com/docs).
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+* To build for production: 
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+#### `npm run build`
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+* To deploy:
 
-## Learn More
+#### `firebase deploy`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+* Visit the live site:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+#### `https://lists-and-friends.firebaseapp.com/`
 
-### Code Splitting
+## Upcoming Features
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+- [] More robust tests that test beyond basic functionality & can be run together
+- [] Password recovery and option to change username
+- [] User groups, allowing a user to use a single login to see all their groups
+- [] Private lists
+- [] Prettier sign up/sign in pop ups
 
-### Analyzing the Bundle Size
+## Built With
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+* [ReactJS](https://reactjs.org/) - Frontend library
+* [Firebase](https://firebase.google.com/docs) - Database and deployment
+* [Cypress](https://www.cypress.io/) - Testing library
+* [Bootstrap](https://getbootstrap.com/docs/4.3/getting-started/introduction/) - CSS library
 
-### Making a Progressive Web App
+React and Firebase were used because of my familiarity with both in previous projects. React's efficient UI updating and its flexibility with the backend made it an easy choice. Firebase was chosen because it handles authentication, database, and hosting in one place, making development and managing the app in a short time period very smooth. Bootstrap was used to give the app a clean look while minimizing time spent styling. Cypress, with the cypress-firebase library, allowed testing of authenticated features with minimal configuration.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+## Author
 
-### Advanced Configuration
+* **Lauren Piontek** - *Initial work* - [piontekle](https://github.com/piontekle)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+## Acknowledgments
 
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+* Thank you to the Robin Wieruch article [A Firebase in React Tutorial for Beginners](https://www.robinwieruch.de/complete-firebase-authentication-react-tutorial/) for getting me started with the authentication context.
+* Thank you to the Prescott Prue tutorial, [Testing React + Firebase Apps With Cypress](https://medium.com/@prescottprue/testing-react-firebase-apps-with-cypress-7d7a64d155de)for helping me set up testing.
