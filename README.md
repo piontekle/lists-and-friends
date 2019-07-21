@@ -56,15 +56,15 @@ Deployed with [Firebase](https://firebase.google.com/docs).
 
 * Visit the live site:
 
-#### `[Lists & Friends](https://lists-and-friends.firebaseapp.com/)`
+#### [Lists & Friends](https://lists-and-friends.firebaseapp.com/)
 
 ## Upcoming Features
 
-- [] More robust tests that test beyond basic functionality & can be run together
-- [] Password recovery and option to change username
-- [] User groups, allowing a user to use a single login to see all their groups
-- [] Private lists
-- [] Prettier sign up/sign in pop ups
+- [ ] More robust tests that test beyond basic functionality & can be run together
+- [ ] Password recovery and option to change username
+- [ ] User groups, allowing a user to use a single login to see all their groups
+- [ ] Private lists
+- [ ] Prettier sign up/sign in pop ups
 
 ## Built With
 
