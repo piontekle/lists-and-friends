@@ -41,6 +41,6 @@
   "devDependencies": {
     "cypress": "^3.4.0",
     "cypress-firebase": "^0.2.0",
-    "lodash": "^4.17.14"
+    "lodash": "^4.17.19"
   }
 }
